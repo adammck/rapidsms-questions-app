@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+{% load reporters %}
+
+{% block stylesheets %}<link type="text/css" rel="stylesheet" href="/static/questions/stylesheets/questions.css" />{% endblock %}
+{% block javascripts %}<script type="text/javascript" src="/static/webui/javascripts/jquery.flot.js"></script>{% endblock %}
+
+{% block title %}Questions{% endblock %}
+
+{% block content %}{% for section in sections %}
+<div class="module">
+	<h2>{{ section.title }}</h2>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col" title="Question Number">#</th>
+				<th scope="col">Question</th>
+				<th scope="col" title="Total number of Answers submited">A.</th>
+				<th scope="col" title="Percentage of submissions answering this Question">Pc</th>
+				<th scope="col">Latest Answer</th>
+			</tr>
+		</thead>
+		<tbody>{% for question in section.questions.all %}
+			<tr>
+				<td>{{ question.number }}</td>
+				<td class="question"><a href="/questions/{{ question.pk }}">{{ question.text }}</a></td>
+				<td>{{ question.num_answers }}</td>
+				<td>{{ question.answer_percentage }}%</td>{% if question.last_answer %}
+				<td>
+					{{ question.last_answer.submission.submitted|last_seen }}
+					<span class="na">by</span>{% if question.last_answer.submission.reporter %}
+					<a href="/reporters/{{ question.last_answer.submission.reporter.pk }}"{% if question.last_answer.submission.reporter.full_name %}>{{ question.last_answer.submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
+					<span class="connection">{{ question.last_answer.submission.connection }}</span>{% endif %}
+				</td>{% else %}
+				<td class="na" title="No responses to this question have ever been received">Never</td>{% endif %}
+			</tr>{% ifequal question.pk 1 %}
+			<tr>
+				<td colspan="5" class="visualization">
+					<div id="graph" style="width: 50%; height: 260px; float: left;"></div>
+					<div style="width: 50%; float: left;">
+						<h2>Answers Received to {{ question }}</h2>
+						<table style="border: 1px solid #eee; background: #fff;">
+							<thead>
+								<tr>
+									<th>Answer</th>
+									<th>Normalized</th>
+									<th>Reporter</th>
+									<th>Date/time</th>
+								</tr>
+							</thead>
+							<tbody>{% for answer in question.answers.all %}
+								<tr>
+									<td>{{ answer.raw_text }}</td>
+									<td>x</td>{% if answer.submission.reporter %}
+									<td><a href="/reporters/{{ answer.submission.reporter.pk }}"{% if answer.submission.reporter.full_name %}>{{ answer.submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
+									<td><span class="connection">{{ answer.submission.connection }}</span></td>{% endif %}
+									<td>{{ answer.submission.submitted|last_seen }}</td>
+								</tr>{% endfor %}
+							</tbody>
+							<tfoot>
+									<td colspan="5">
+										<span>{{ question.answers.count }} Answers</span>
+									</td>
+							</tfoot>
+						</table>
+					</div>
+					<div class="clear-hack"></div>
+					<script type="text/javascript">
+						$(function () {
+							var d1 = [];
+							for (var i = 0; i < 7; i += 0.05)
+								d1.push([i, Math.sin(i)]);
+
+							$.plot($("#graph"), [d1], {
+								"grid": {
+									"backgroundColor": "#fff"
+								}
+							});
+						});
+					</script>
+				</td>
+			</tr>{% endifequal %}{% endfor %}
+		</tbody>
+		<tfoot>
+				<td colspan="5">
+					<span>What?</span>
+				</td>
+		</tfoot>
+	</table>
+</div>{% endfor %}
+{% endblock %}

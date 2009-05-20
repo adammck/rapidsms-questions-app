@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% load reporters %}
+{% load pagination %}
+
+{% block title %}Submissions{% endblock %}
+
+{% block content %}
+<div class="module">
+	<h2>All Submissions</h2>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Section</th>
+				<th scope="col">Answers</th>
+				<th scope="col">Reporter</th>
+				<th scope="col">Date/time</th>
+			</tr>
+		</thead>
+		<tbody>{% if submissions.object_list %}{% for submission in submissions.object_list %}
+			<tr>
+				<td>{{ submission.section }}</td>
+				<td>{{ submission.number_of_answers }}</td>{% if submission.reporter %}
+				<td><a href="/reporters/{{ submission.reporter.pk }}"{% if submission.reporter.full_name %}>{{ submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
+				<td>{{ submission.connection }}</td>{% endif %}
+				<td>{{ submission.submitted|last_seen }}</td>
+			</tr>{% endfor %}{% else %}
+			<tr class="no-data">
+				<td colspan="3">
+					No Submissions Yet.
+				</td>
+			</tr>{% endif %}
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="4">
+					{% paginator submissions %}
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+	<div class="toolbar">
+		<a href="/reporters/add" class="add">Add a Reporter</a>
+	</div>
+</div>
+{% endblock %}

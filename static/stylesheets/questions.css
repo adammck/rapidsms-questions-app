@@ -1,0 +1,28 @@
+/* UNICEF RapidSMS UI
+ * vim:set noet:
+ * --
+ * questions.css
+ * --
+ * This stylesheet contains the customizations just
+ * for the "Questions" app, to display the sections,
+ * questions, answers, and graphs in a more contextual
+ * way that the global stylesheets allow */
+
+
+table {
+	width: 100%;
+}
+
+	td {
+		width: 1%;
+		white-space: nowrap;
+	}
+	
+		td.question {
+			width: auto;
+		}
+
+
+td.visualization {
+	background: #f8f8f8;
+}

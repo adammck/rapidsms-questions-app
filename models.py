@@ -35,30 +35,54 @@ class Question(models.Model):
     text    = models.TextField()
     
     class Meta:
-        ordering = ["number"]
+        ordering = ["section", "number"]
     
     def __unicode__(self):
         return "%s Q%d" % (
             self.section,
             self.number)
+    
+    @property
+    def num_answers(self):
+        return self.answers.count()
+    
+    @property
+    def answer_percentage(self):
+        sect_sub = self.section.submissions.count()
+        if not sect_sub:
+            return "0"
+        
+        return "%2d" % ((float(self.num_answers) / sect_sub) * 100)
+    
+    @property
+    def last_answer(self):
+        ans_objs = self.answers.all().order_by("-submission__submitted")
+        return ans_objs[0] if ans_objs.count() else None
 
 
 class Submission(models.Model):
     reporter   = models.ForeignKey(Reporter, null=True, related_name="submissions")
     connection = models.ForeignKey(PersistantConnection, null=True, related_name="submissions")
+    section    = models.ForeignKey(Section, related_name="submissions")
     submitted  = models.DateTimeField(auto_now_add=True)
-    section    = models.ForeignKey(Section)
     raw_text   = models.TextField()
+    
+    class Meta:
+        ordering = ["-submitted"]
     
     def __unicode__(self):
         return "Submission by %s on %s" % (
             (self.reporter or self.connection),
             self.section)
+    
+    @property
+    def num_answers(self):
+        return self.answers.count()
 
 
 class Answer(models.Model):
-    submission = models.ForeignKey(Submission)
-    question   = models.ForeignKey(Question)
+    submission = models.ForeignKey(Submission, related_name="answers")
+    question   = models.ForeignKey(Question, related_name="answers")
     raw_text   = models.TextField()
     
     def __unicode__(self):
