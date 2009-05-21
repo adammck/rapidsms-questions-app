@@ -17,9 +17,12 @@ def submissions(req):
 
 @require_GET
 def questions(req, pk=None):
+    active_question = int(pk) if pk is not None else ""
+    
     return render_to_response(req,
         "questions/questions.html", {
-        "sections": Section.objects.all()
+        "sections": Section.objects.all(),
+        "active_question": active_question
     })
 
 

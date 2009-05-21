@@ -8,12 +8,12 @@
 
 {% block content %}{% for section in sections %}
 <div class="module">
-	<h2>{{ section.title }}</h2>
+	<h2>{{ section.title }} </h2>
 	<table>
 		<thead>
 			<tr>
 				<th scope="col" title="Question Number">#</th>
-				<th scope="col">Question</th>
+				<th scope="col" class="question">Question</th>
 				<th scope="col" title="Total number of Answers submited">A.</th>
 				<th scope="col" title="Percentage of submissions answering this Question">Pc</th>
 				<th scope="col">Latest Answer</th>
@@ -32,7 +32,7 @@
 					<span class="connection">{{ question.last_answer.submission.connection }}</span>{% endif %}
 				</td>{% else %}
 				<td class="na" title="No responses to this question have ever been received">Never</td>{% endif %}
-			</tr>{% ifequal question.pk 1 %}
+			</tr>{% ifequal question.pk active_question %}
 			<tr>
 				<td colspan="5" class="visualization">
 					<div id="graph" style="width: 50%; height: 260px; float: left;"></div>
@@ -50,7 +50,7 @@
 							<tbody>{% for answer in question.answers.all %}
 								<tr>
 									<td>{{ answer.raw_text }}</td>
-									<td>x</td>{% if answer.submission.reporter %}
+									<td>{{ answer.normalized }}</td>{% if answer.submission.reporter %}
 									<td><a href="/reporters/{{ answer.submission.reporter.pk }}"{% if answer.submission.reporter.full_name %}>{{ answer.submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
 									<td><span class="connection">{{ answer.submission.connection }}</span></td>{% endif %}
 									<td>{{ answer.submission.submitted|last_seen }}</td>
@@ -58,6 +58,7 @@
 							</tbody>
 							<tfoot>
 									<td colspan="5">
+										<a href="/questions/{{ question.pk }}/export/xls">Export to Excel</a>
 										<span>{{ question.answers.count }} Answers</span>
 									</td>
 							</tfoot>
@@ -69,12 +70,25 @@
 							var d1 = [];
 							for (var i = 0; i < 7; i += 0.05)
 								d1.push([i, Math.sin(i)]);
-
-							$.plot($("#graph"), [d1], {
+							
+							var data = [{
+								"data": [[0, 2], [0,2], [1,3]],
+								"bars": { "show": true }
+							}];
+							
+							var options = {
 								"grid": {
-									"backgroundColor": "#fff"
+									"backgroundColor": "#fff",
+									"markings": null,
+								},
+								"xaxis": {
+									"min": 0,
+									"max": 2,
+									"ticks": [[0.5, "No"], [1.5, "Yes"]]
 								}
-							});
+							};
+							
+							$.plot($("#graph"), data, options);
 						});
 					</script>
 				</td>
@@ -82,7 +96,8 @@
 		</tbody>
 		<tfoot>
 				<td colspan="5">
-					<span>What?</span>
+					<a href="">Export to Excel</a>
+					<span>{{ section.questions.all.count }} Questions</span>
 				</td>
 		</tfoot>
 	</table>

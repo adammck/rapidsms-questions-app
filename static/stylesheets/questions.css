@@ -13,12 +13,13 @@ table {
 	width: 100%;
 }
 
-	td {
+	td, th {
 		width: 1%;
 		white-space: nowrap;
 	}
 	
-		td.question {
+		td.question,
+		th.question {
 			width: auto;
 		}
 
