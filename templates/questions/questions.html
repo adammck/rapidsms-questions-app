@@ -6,7 +6,7 @@
 
 {% block title %}Questions{% endblock %}
 
-{% block content %}{% for section in sections %}
+{% block content %}{% for section in sections %}{% if section.questions.all %}
 <div class="module">
 	<h2>{{ section.title }} </h2>
 	<table>
@@ -101,5 +101,5 @@
 				</td>
 		</tfoot>
 	</table>
-</div>{% endfor %}
+</div>{% endif %}{% endfor %}
 {% endblock %}
