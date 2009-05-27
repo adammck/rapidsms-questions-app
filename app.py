@@ -40,10 +40,16 @@ class App(rapidsms.app.App):
                 self.info("Grabbed message: Section=%s, Text=%r" %
                     (sect_obj, text))
                 
+                # maybe the message has a Location attached
+                # ...or maybe it doesn't. either way, store
+                # it (or None) alongside the submission
+                loc = getattr(msg, "location", None)
+                
                 # regardless of whether the submission was
                 # valid or not, we want to keep hold of it
                 sub_obj = Submission.objects.create(
                     section=sect_obj,
+                    location=loc,
                     raw_text=text,
                     **msg.persistance_dict)
                 

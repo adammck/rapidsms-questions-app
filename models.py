@@ -4,6 +4,7 @@
 
 import re
 from django.db import models
+from apps.locations.models import Location
 from apps.reporters.models import PersistantConnection, Reporter
 
 
@@ -107,6 +108,7 @@ class Option(models.Model):
 class Submission(models.Model):
     reporter   = models.ForeignKey(Reporter, null=True, related_name="submissions")
     connection = models.ForeignKey(PersistantConnection, null=True, related_name="submissions")
+    location   = models.ForeignKey(Location, null=True, related_name="submissions")
     section    = models.ForeignKey(Section, related_name="submissions")
     submitted  = models.DateTimeField(auto_now_add=True)
     raw_text   = models.TextField()
