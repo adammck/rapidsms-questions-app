@@ -29,8 +29,6 @@ class Section(models.Model):
         return self.code
 
 
-
-
 class Question(models.Model):
     QUESTION_TYPES = (
         ("F", "Free text"),
@@ -78,8 +76,6 @@ class Question(models.Model):
         return ans_objs[0] if ans_objs.count() else None
 
 
-
-
 class Option(models.Model):
     question = models.ForeignKey(Question, related_name="options")
     text     = models.CharField(max_length=100)
@@ -108,8 +104,6 @@ class Option(models.Model):
             self.text)
 
 
-
-
 class Submission(models.Model):
     reporter   = models.ForeignKey(Reporter, null=True, related_name="submissions")
     connection = models.ForeignKey(PersistantConnection, null=True, related_name="submissions")
@@ -130,8 +124,6 @@ class Submission(models.Model):
     @property
     def num_answers(self):
         return self.answers.count()
-
-
 
 
 class Answer(models.Model):
@@ -177,5 +169,4 @@ class Answer(models.Model):
             return None
         
         # nothing else is supported yet!
-        else: raise NotImplemented
-
+        else: return None
