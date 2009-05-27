@@ -8,4 +8,5 @@ from apps.questions.models import *
 admin.site.register(Section)
 admin.site.register(Question)
 admin.site.register(Submission)
+admin.site.register(Option)
 admin.site.register(Answer)

@@ -29,10 +29,27 @@ class Section(models.Model):
         return self.code
 
 
+
+
 class Question(models.Model):
+    QUESTION_TYPES = (
+        ("F", "Free text"),
+        ("B", "Boolean"),
+        ("N", "Numeric"),
+        ("M", "Multiple choice"))
+    
+    type = models.CharField(max_length=1, choices=QUESTION_TYPES,
+        help_text="<br>".join([
+            "<b>Free Text</b> questions will accept any text, but can use Options to coerce expected answers into data.",
+            "<b>Boolean</b> questions will accept TRUE or FALSE, in a variety of guises. Options are ignored.",
+            "<b>Numeric</b> questions will accept any numeric (integer or decimal) value. Options are ignored.",
+            "<b>Multiple Choice</b> questions will only accept a valid Option.",
+        ]))
+    
     section = models.ForeignKey(Section, related_name="questions")
     number  = models.IntegerField()
     text    = models.TextField()
+
     
     class Meta:
         ordering = ["section", "number"]
@@ -41,6 +58,7 @@ class Question(models.Model):
         return "%s Q%d" % (
             self.section,
             self.number)
+    
     
     @property
     def num_answers(self):
@@ -60,12 +78,45 @@ class Question(models.Model):
         return ans_objs[0] if ans_objs.count() else None
 
 
+
+
+class Option(models.Model):
+    question = models.ForeignKey(Question, related_name="options")
+    text     = models.CharField(max_length=100)
+    
+    letters = models.CharField(max_length=10, blank=True,
+        help_text="Any answer containing ONLY a letter from this field " +\
+                  "is assumed to be referring to this option. Intended " +\
+                  "for shortcuts like <b>1</b> or <b>a</b>.")
+    
+    words = models.TextField(blank=True,
+        help_text="Enter one word per line. Any answer containing " +\
+                  "a word is assumed to be referring to this option.")
+    
+    pattern = models.CharField(max_length=100, blank=True,
+        help_text="Any answer matched by this pattern is " +\
+                  "assumed to be referring to this option.")
+    
+    
+    class Meta:
+        ordering = ["id"]
+    
+    
+    def __unicode__(self):
+        return "Option to %s: %s" % (
+            self.question,
+            self.text)
+
+
+
+
 class Submission(models.Model):
     reporter   = models.ForeignKey(Reporter, null=True, related_name="submissions")
     connection = models.ForeignKey(PersistantConnection, null=True, related_name="submissions")
     section    = models.ForeignKey(Section, related_name="submissions")
     submitted  = models.DateTimeField(auto_now_add=True)
     raw_text   = models.TextField()
+    
     
     class Meta:
         ordering = ["-submitted"]
@@ -75,17 +126,56 @@ class Submission(models.Model):
             (self.reporter or self.connection),
             self.section)
     
+    
     @property
     def num_answers(self):
         return self.answers.count()
 
 
+
+
 class Answer(models.Model):
+    TRUE  = re.compile(r"^(?:[YT].*|1)$", re.IGNORECASE)
+    FALSE = re.compile(r"^(?:[NF].*|0)$", re.IGNORECASE)
+    
     submission = models.ForeignKey(Submission, related_name="answers")
     question   = models.ForeignKey(Question, related_name="answers")
     raw_text   = models.TextField()
+    
     
     def __unicode__(self):
         return "Answer to %s: %s" % (
             self.question,
             self.raw_text)
+    
+    
+    @property
+    def normalized(self):
+        text = self.raw_text.strip()
+        type = self.question.type
+        
+        # free text
+        if type == "F":
+            return text
+        
+        # boolean
+        elif type == "B":
+            if    self.TRUE.match(text):  return True
+            elif  self.FALSE.match(text): return False
+            else:                         return None
+        
+        # numeric
+        elif type == "N":
+            
+            # attempt to cast the text to a 
+            for func in [int, float]:
+                try: return func(text)
+                except: pass
+
+            # the answer couldn't be cast to a
+            # float or int, so return None (unknown)
+            return None
+        
+        # nothing else is supported yet!
+        else: raise NotImplemented
+
