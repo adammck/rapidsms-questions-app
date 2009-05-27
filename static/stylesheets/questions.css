@@ -9,21 +9,22 @@
  * way that the global stylesheets allow */
 
 
-table {
+#inner table {
 	width: 100%;
 }
 
-	td, th {
+	#inner td,
+	#inner th {
 		width: 1%;
 		white-space: nowrap;
 	}
 	
-		td.question,
-		th.question {
+		#inner td.question,
+		#inner th.question {
 			width: auto;
 		}
 
 
-td.visualization {
+#inner td.visualization {
 	background: #f8f8f8;
 }
