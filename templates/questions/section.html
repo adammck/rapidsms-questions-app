@@ -27,15 +27,7 @@
 		<tbody>{% for question in questions %}
 			<tr>
 				<td class="number">{{ question.number }}</td>
-				<td class="question">
-					<a href="{% url view-question section_pk=question.section.pk question_pk=question.pk %}">{{ question.text }}</a>{% if question.options.all %}
-					<ul class="options">{% for option in question.options.all %}
-						<li>
-							<span class="letter">{{ option.letters }}</span>.
-							<span class="text">{{ option.text }}</span>
-						</li>{% endfor %}
-					</ul>{% endif %}
-				</td>
+				<td class="question"><a href="{% url view-question section_pk=question.section.pk question_pk=question.pk %}">{{ question.text }}</a></td>
 				<td>{{ question.get_type_display }}</td>
 				<td>{{ question.num_answers }}</td>{% if question.last_answer %}
 				<td>
