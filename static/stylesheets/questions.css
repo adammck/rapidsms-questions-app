@@ -21,10 +21,36 @@
 	
 		#inner td.question,
 		#inner th.question {
+			white-space: normal;
+			line-height: 1.4;
 			width: auto;
 		}
 
 
-#inner td.visualization {
-	background: #f8f8f8;
+div.questions td.number,
+div.questions th.number {
+	border-right: 1px dotted #eee;
+	padding-right: 0.5em;
+	text-align: right;
 }
+
+#inner td.answers {
+	padding-right: 0.5em;
+}
+
+/* questions with linked choices list them
+ * directly below the question text's line,
+ * so make them fairly subtle */
+td.question ul.options {
+	font-size: 80%;
+	padding: 0;
+	margin: 0;
+}
+
+	td.question ul.options li {
+		display: block;
+		margin-right: 1.25em;
+		margin-top: 0.625em;
+		float: left;
+		color: #ccc;
+	}
