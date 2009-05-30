@@ -22,21 +22,29 @@ def dashboard(req):
 
 
 @require_GET
-def section(req, pk):
-    sect = get_object_or_404(Section, pk=pk)
+def section(req, section_pk):
+    sect = get_object_or_404(
+        Section, pk=section_pk)
     
     return render_to_response(req,
         "questions/section.html", {
-        "active_section_tab": sect.pk,
-        
-        "questions": sect.questions.all(),
-        "section": sect })
+            "active_section_tab": sect.pk,
+            
+            "questions": sect.questions.all(),
+            "section": sect })
 
 
 @require_GET
-def question(req):
+def question(req, section_pk, question_pk):
+    sect = get_object_or_404(Section, pk=section_pk)
+    ques = get_object_or_404(Question, pk=question_pk)
+    
     return render_to_response(req,
-        "questions/question.html")
+        "questions/question.html", {
+            "active_section_tab": sect.pk,
+            "answers": ques.answers.all(),
+            "question": ques,
+            "section": sect })
 
 
 

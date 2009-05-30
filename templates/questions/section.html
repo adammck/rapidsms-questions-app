@@ -1,9 +1,6 @@
 {% extends "questions/base.html" %}
 {% load reporters %}
 
-{% block stylesheets %}<link type="text/css" rel="stylesheet" href="/static/questions/stylesheets/questions.css" />{% endblock %}
-{% block javascripts %}<script type="text/javascript" src="/static/webui/javascripts/jquery.flot.js"></script>{% endblock %}
-
 {% block title %}Questions{% endblock %}
 
 {% block content %}{% if questions %}
@@ -30,7 +27,7 @@
 		<tbody>{% for question in questions %}
 			<tr>
 				<td>{{ question.number }}</td>
-				<td class="question"><a href="/questions/{{ question.pk }}">{{ question.text }}</a></td>
+				<td class="question"><a href="{% url view-question section_pk=question.section.pk question_pk=question.pk %}">{{ question.text }}</a></td>
 				<td>{{ question.num_answers }}</td>
 				<td>{{ question.answer_percentage }}%</td>{% if question.last_answer %}
 				<td>

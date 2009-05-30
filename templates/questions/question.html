@@ -1,0 +1,37 @@
+{% extends "questions/base.html" %}
+{% load reporters %}
+
+{% block title %}Questions{% endblock %}
+
+{% block content %}
+<div class="module">
+	<h2>Answers Received to {{ question }}</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Raw Answer</th>
+				<th>Normalized Answer</th>
+				<th>Reporter</th>
+				<th>Location</th>
+				<th>Date/time</th>
+			</tr>
+		</thead>
+		<tbody>{% for answer in answers %}
+			<tr>
+				<td>{{ answer.raw_text }}</td>
+				<td>{{ answer.normalized }}</td>{% if answer.submission.reporter %}
+				<td><a href="/reporters/{{ answer.submission.reporter.pk }}"{% if answer.submission.reporter.full_name %}>{{ answer.submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
+				<td><span class="connection">{{ answer.submission.connection }}</span></td>{% endif %}
+				<td>{{ answer.submission.location }}</td>
+				<td>{{ answer.submission.submitted|last_seen }}</td>
+			</tr>{% endfor %}
+		</tbody>
+		<tfoot>
+				<td colspan="6">
+					<a href="/questions/{{ question.pk }}/export/xls">Export to Excel</a>
+					<span>{{ answers|length }} Answers</span>
+				</td>
+		</tfoot>
+	</table>
+</div>
+{% endblock %}

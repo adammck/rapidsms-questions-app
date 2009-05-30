@@ -13,11 +13,11 @@ urlpatterns = patterns('',
     
     # view all questions and recent activity
     # within a section
-    url(r'^sections/(?P<pk>\d+)$',
+    url(r'^sections/(?P<section_pk>\d+)$',
         views.section, name="view-section"),
     
     # to view all of the submissions and answers
     # linked to a question, with lightweight graphs
-    url(r'^sections/(?P<section_pk>\d?)/questions/(?P<question_pk>\d+)/view$',
+    url(r'^sections/(?P<section_pk>\d?)/questions/(?P<question_pk>\d+)$',
         views.question, name="view-question")
 )
