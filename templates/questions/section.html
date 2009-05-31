@@ -27,7 +27,7 @@
 		<tbody>{% for question in questions %}
 			<tr>
 				<td class="number">{{ question.number }}</td>
-				<td class="question"><a href="{% url view-question section_pk=question.section.pk question_pk=question.pk %}">{{ question.text }}</a></td>
+				<td class="question"><a href="{% url view-question section_pk=section.pk question_pk=question.pk %}">{{ question.text }}</a></td>
 				<td>{{ question.get_type_display }}</td>
 				<td>{{ question.num_answers }}</td>{% if question.last_answer %}
 				<td>

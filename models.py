@@ -73,8 +73,17 @@ class Question(models.Model):
     
     @property
     def last_answer(self):
-        ans_objs = self.answers.all().order_by("-submission__submitted")
-        return ans_objs[0] if ans_objs.count() else None
+        """Returns the latest Answer to this Question, via the linked Sumbmission
+           object's _submission_ field,, or returns None is no Answers are linked."""
+        
+        try:
+            return self.answers.all().order_by("-submission__submitted")[0]
+        
+        # if there were no Answer objects, accessing [0]
+        # will raise an indexerror, so wrap and return
+        # None, to indicate something like NO ANSWERS
+        except IndexError:
+            return None
 
 
 class Option(models.Model):
