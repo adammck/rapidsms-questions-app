@@ -5,29 +5,34 @@
 
 {% block content %}
 <div class="module answers">
-	<h2>Answers Received to {{ question }}</h2>
+	<h2>All Answers for: <strong>{{ question.text }}</strong></h2>
 	<table>
 		<thead>
 			<tr>
-				<th>Raw Answer</th>
-				<th>Normalized Answer</th>
-				<th>Reporter</th>
-				<th>Location</th>
-				<th>Date/time</th>
+				<th scope="col">Raw Answer</th>
+				<th scope="col" class="normalized">Normalized Answer</th>
+				<th scope="col">Reporter</th>
+				<th scope="col">Location</th>
+				<th scope="col">Date/time</th>
 			</tr>
 		</thead>
-		<tbody>{% for answer in answers %}
+		<tbody>{% if answers %}{% for answer in answers %}
 			<tr>
 				<td>{{ answer.raw_text }}</td>
-				<td>{{ answer.normalized }}</td>{% if answer.submission.reporter %}
+				<td class="normalized">{{ answer.normalized }}</td>{% if answer.submission.reporter %}
 				<td><a href="/reporters/{{ answer.submission.reporter.pk }}"{% if answer.submission.reporter.full_name %}>{{ answer.submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
 				<td><span class="connection">{{ answer.submission.connection }}</span></td>{% endif %}
 				<td>{{ answer.submission.location }}</td>
 				<td>{{ answer.submission.submitted|last_seen }}</td>
-			</tr>{% endfor %}
+			</tr>{% endfor %}{% else %}
+			<tr class="no-data">
+				<td colspan="5">
+					No Answers Yet.
+				</td>
+			</tr>{% endif %}
 		</tbody>
 		<tfoot>
-				<td colspan="6">
+				<td colspan="5">
 					<a href="/questions/{{ question.pk }}/export/xls">Export to Excel</a>
 					<span>{{ answers|length }} Answers</span>
 				</td>

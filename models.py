@@ -114,6 +114,26 @@ class Option(models.Model):
             self.text)
 
 
+    def match(self, text):
+        if self.letters:
+            if re.match(r"^(" + "|".join(self.letters) + r")\.?$", text, re.IGNORECASE):
+                return True
+        
+        elif self.words:
+            if re.match(r"^.*" + ("|".join(self.words.split("\n"))) + r".*$", text, re.IGNORECASE):
+                return True
+        
+        elif self.pattern:
+            if re.match(self.pattern, text, re.IGNORECASE):
+                return True
+        
+        # if we haven't returned yet,
+        # this option does not match
+        return False
+
+            
+
+
 class Submission(models.Model):
     reporter   = models.ForeignKey(Reporter, null=True, related_name="submissions")
     connection = models.ForeignKey(PersistantConnection, null=True, related_name="submissions")
@@ -159,6 +179,13 @@ class Answer(models.Model):
         
         # free text
         if type == "F":
+            
+            # attempt to match an option
+            # but it's no big deal if none do
+            for opt in self.question.options.all():
+                if opt.match(text):
+                    return opt.text
+            
             return text
         
         # boolean
@@ -179,5 +206,17 @@ class Answer(models.Model):
             # float or int, so return None (unknown)
             return None
         
+        # multiple-choice
+        elif type == "M":
+            
+            # match the text to an option or return
+            # None (unknown) - it's a strict version of
+            # "free text", when ambiguity is undesirable
+            for opt in self.question.options.all():
+                if opt.match(text):
+                    return opt.text
+            
+            return None
+            
         # nothing else is supported yet!
         else: return None

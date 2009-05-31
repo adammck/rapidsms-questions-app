@@ -29,7 +29,6 @@ def section(req, section_pk):
     return render_to_response(req,
         "questions/section.html", {
             "active_section_tab": sect.pk,
-            
             "questions": sect.questions.all(),
             "section": sect })
 
@@ -42,7 +41,7 @@ def question(req, section_pk, question_pk):
     return render_to_response(req,
         "questions/question.html", {
             "active_section_tab": sect.pk,
-            "answers": ques.answers.all(),
+            "answers": ques.answers.all().select_related(),
             "question": ques,
             "section": sect })
 

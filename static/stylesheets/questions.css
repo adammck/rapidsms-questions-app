@@ -19,12 +19,16 @@
 		white-space: nowrap;
 	}
 	
-		#inner td.question,
-		#inner th.question {
+		#inner div.questions th.question,
+		#inner div.questions td.question {
 			white-space: normal;
 			line-height: 1.4;
 			width: auto;
 		}
+		
+		#inner div.answers th.normalized,
+		#inner div.answers td.normalized {
+			width: auto; }
 
 /* the first column is a kind of index, so
  * separate it from the others. maybe this
