@@ -30,9 +30,43 @@
 		#inner div.answers td.normalized {
 			width: auto; }
 		
-		#inner div.submissions th.rawtext,
-		#inner div.submissions td.rawtext {
-			width: auto; }
+		#inner div.submissions th.answers,
+		#inner div.submissions td.answers {
+			width: auto;
+		}
+
+
+/* for each submission, the normalized answers
+ * are displayed in an unordered list. seriously
+ * rejig the css here, to look (almost) the same,
+ * but with the [Q1] part filling the height of
+ * the cell, and the normalized answer(s) following */
+#inner div.submissions td.answers {
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+	#inner div.submissions td.answers ul {
+		padding: 0;
+		margin: 0;
+	}
+
+		#inner div.submissions td.answers li {
+			display: block;
+			margin-right: 1em;
+			line-height: 2em;
+			float: left;
+		}
+	
+			#inner div.submissions td.answers span {
+				display: block;
+				float: left;
+				padding: 0 0.25em;
+				background: #f8f8f8;
+				margin-right: 0.5em;
+				color: #aaa;
+			}
+
 
 /* the first column is a kind of index, so
  * separate it from the others. maybe this

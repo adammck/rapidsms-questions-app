@@ -11,8 +11,9 @@
 		<thead>
 			<tr>
 				<th scope="col">Section</th>
-				<th scope="col" class="rawtext">Raw Text</th>
-				<th scope="col">Answers</th>
+				<th scope="col" class="location">Location</th>
+				<th scope="col" class="answers">Normalized Answers</th>
+				<th scope="col">Raw Text</th>
 				<th scope="col">Date + Time</th>{% if not reporter and not connection %}
 				<th scope="col">Reported By</th>{% endif %}
 			</tr>
@@ -20,8 +21,13 @@
 		<tbody>{% if submissions.object_list %}{% for submission in submissions.object_list %}
 			<tr>
 				<td>{{ submission.section }}</td>
-				<td class="rawtext">{{ submission.raw_text }}</td>
-				<td>{{ submission.number_of_answers }}</td>
+				<td class="location{% if submission.location %}">{{ submission.location }}{% else %} na">Unknown{% endif %}</td>
+				<td class="answers">{% for answ in submission.answers.all %}
+					<ul>
+						<li><span title="{{ answ.question.text }}">Q{{ answ.question.number }}</span> {{ answ.normalized }}</li>
+					</ul>{% endfor %}
+				</td>
+				<td>{{ submission.raw_text }}</td>
 				<td>{{ submission.submitted|last_seen }}</td>{% if not reporter and not connection %}{% if submission.reporter %}
 				<td><a href="{% url submissions-by-reporter submission.reporter.pk %}" class="reporter{% if submission.reporter.full_name %}">{{ submission.reporter.full_name }}{% else %} unknown">Unknown{% endif %}</a></td>{% else %}
 				<td><a href="{% url submissions-by-connection submission.connection.pk %}" class="connection">{{ submission.connection }}</a></td>{% endif %}{% endif %}
