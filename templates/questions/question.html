@@ -21,7 +21,7 @@
 				<td>{{ answer.raw_text }}</td>
 				<td class="normalized">{{ answer.normalized }}</td>{% if answer.submission.reporter %}
 				<td><a href="/reporters/{{ answer.submission.reporter.pk }}"{% if answer.submission.reporter.full_name %}>{{ answer.submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
-				<td><span class="connection">{{ answer.submission.connection }}</span></td>{% endif %}
+				<td><a href="{{ answer.submission.connection.add_reporter_url }}">{{ answer.submission.connection }}</a></td>{% endif %}
 				<td>{{ answer.submission.location }}</td>
 				<td>{{ answer.submission.submitted|last_seen }}</td>
 			</tr>{% endfor %}{% else %}
