@@ -7,6 +7,7 @@ from django.utils.simplejson import JSONEncoder
 from django.shortcuts import get_object_or_404
 from rapidsms.webui.utils import *
 from apps.questions.models import *
+from apps.reporters.models import *
 from apps.export.utils import excel
 
 
@@ -64,6 +65,41 @@ def question_xls(req, section_pk, question_pk):
     return excel(
         [["Answer", "Reporter", "Location", "Date"]] +
         [__row(ans) for ans in ques.answers.all()])
+
+
+@require_GET
+def submissions(req, reporter_pk=None, connection_pk=None):
+    
+    # if this view was accessed via /reporters/n/submissions,
+    # include only those submissions linked to the reporter
+    if reporter_pk is not None:
+        rep = get_object_or_404(Reporter, pk=reporter_pk)
+        subm = rep.submissions.all().order_by("-submitted")
+        
+        data = {
+            "submissions": paginated(req, subm),
+            "reporter": rep }
+        
+    # likewise for /connections/n/submissions
+    # (TODO: right now, there is no /connections/n/
+    # view in apps.reporters.views, which is rather
+    # confusing. we should probably implement it)
+    elif connection_pk is not None:
+        conn = get_object_or_404(PersistantConnection, pk=connection_pk)
+        subm = conn.submissions.all().order_by("-submitted")
+        
+        data = {
+            "submissions": paginated(req, subm),
+            "connection": conn }
+    
+    # otherwise, include *all* submissions
+    else:
+        subm = Submission.objects.all().order_by("-submitted")
+        data = { "submissions": paginated(req, subm) }
+    
+    return render_to_response(req,
+        "questions/submissions.html",
+        data)
 
 
 

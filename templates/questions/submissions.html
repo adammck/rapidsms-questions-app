@@ -1,0 +1,44 @@
+{% extends "questions/base.html" %}
+{% load pagination %}
+{% load reporters %}
+
+{% block title %}Submissions{% endblock %}
+
+{% block content %}
+<div class="module">
+	<h2>All Submissions{% if reporter %} by {{ reporter }}{% else %}{% if connection %} by {{ connection }}{% endif %}{% endif %}</h2>
+	<table>
+		<thead>
+			<tr>
+				<th scope="col">Section</th>
+				<th scope="col">Raw Text</th>
+				<th scope="col">Answers</th>
+				<th scope="col">Date + Time</th>{% if not reporter and not connection %}
+				<th scope="col">Reported By</th>{% endif %}
+			</tr>
+		</thead>
+		<tbody>{% if submissions.object_list %}{% for submission in submissions.object_list %}
+			<tr>
+				<td>{{ submission.section }}</td>
+				<td>{{ submission.raw_text }}</td>
+				<td>{{ submission.number_of_answers }}</td>
+				<td>{{ submission.submitted|last_seen }}</td>{% if not reporter and not connection %}{% if submission.reporter %}
+				<td><a href="{% url submissions-by-reporter submission.reporter.pk %}" class="reporter{% if submission.reporter.full_name %}">{{ submission.reporter.full_name }}{% else %} unknown">Unknown{% endif %}</a></td>{% else %}
+				<td><a href="{% url submissions-by-connection submission.connection.pk %}" class="connection">{{ submission.connection }}</a></td>{% endif %}{% endif %}
+			</tr>{% endfor %}{% else %}
+			<tr class="no-data">
+				<td colspan="5">
+					No Submissions Yet.
+				</td>
+			</tr>{% endif %}
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="5">
+					{% paginator submissions %}
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+{% endblock %}

@@ -33,8 +33,8 @@
 				<td>
 					{{ question.last_answer.submission.submitted|last_seen }}
 					<span class="na">by</span>{% if question.last_answer.submission.reporter %}
-					<a href="/reporters/{{ question.last_answer.submission.reporter.pk }}"{% if question.last_answer.submission.reporter.full_name %}>{{ question.last_answer.submission.reporter.full_name }}{% else %} class="unknown">Unknown{% endif %}</a></td>{% else %}
-					<span class="connection">{{ question.last_answer.submission.connection }}</span>{% endif %}
+					<a href="{% url submissions-by-reporter question.last_answer.submission.reporter.pk %}" class="reporter{% if question.last_answer.submission.reporter.full_name %}">{{ question.last_answer.submission.reporter.full_name }}{% else %} unknown">Unknown{% endif %}</a></td>{% else %}
+					<a href="{% url submissions-by-connection question.last_answer.submission.connection.pk %}" class="connection">{{ question.last_answer.submission.connection }}</a>{% endif %}
 				</td>{% else %}
 				<td class="na" title="No responses to this question have ever been received">Never</td>{% endif %}
 			</tr>{% endfor %}
