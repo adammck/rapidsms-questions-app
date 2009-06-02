@@ -7,10 +7,10 @@ from django.utils.simplejson import JSONEncoder
 from django.shortcuts import get_object_or_404
 from rapidsms.webui.utils import *
 from apps.questions.models import *
+from apps.export.utils import excel
 
 
 def __global(req):
-    """ """
     return {
         "sections": Section.objects.all() }
 
@@ -44,6 +44,26 @@ def question(req, section_pk, question_pk):
             "answers": ques.answers.all().select_related(),
             "question": ques,
             "section": sect })
+
+
+@require_GET
+def question_xls(req, section_pk, question_pk):
+    sect = get_object_or_404(Section, pk=section_pk)
+    ques = get_object_or_404(Question, pk=question_pk)
+    
+    def __row(answer):
+        sub = answer.submission
+        
+        return [
+            answer.normalized,
+            sub.reported_by,
+            sub.location,
+            sub.submitted
+        ]
+    
+    return excel(
+        [["Answer", "Reporter", "Location", "Date"]] +
+        [__row(ans) for ans in ques.answers.all()])
 
 
 

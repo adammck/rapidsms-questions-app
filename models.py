@@ -153,6 +153,18 @@ class Submission(models.Model):
     
     
     @property
+    def reported_by(self):
+        for x in [self.reporter, self.connection]:
+            if x is not None:
+                return x
+        
+        # this won't happen if the submission was
+        # created by app.py, but it could have
+        # been created in the admin... (?)
+        return None
+        
+    
+    @property
     def num_answers(self):
         return self.answers.count()
 

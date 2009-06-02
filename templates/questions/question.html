@@ -32,10 +32,12 @@
 			</tr>{% endif %}
 		</tbody>
 		<tfoot>
+			<tr>
 				<td colspan="5">
-					<a href="/questions/{{ question.pk }}/export/xls">Export to Excel</a>
+					<a href="{% url export-question-xls section_pk=section.pk question_pk=question.pk %}">Export to Excel</a>
 					<span>{{ answers|length }} Answers</span>
 				</td>
+			</tr>
 		</tfoot>
 	</table>
 </div>
