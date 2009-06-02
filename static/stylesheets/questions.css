@@ -29,6 +29,10 @@
 		#inner div.answers th.normalized,
 		#inner div.answers td.normalized {
 			width: auto; }
+		
+		#inner div.submissions th.rawtext,
+		#inner div.submissions td.rawtext {
+			width: auto; }
 
 /* the first column is a kind of index, so
  * separate it from the others. maybe this

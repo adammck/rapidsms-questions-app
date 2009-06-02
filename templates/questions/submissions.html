@@ -5,13 +5,13 @@
 {% block title %}Submissions{% endblock %}
 
 {% block content %}
-<div class="module">
+<div class="module submissions">
 	<h2>All Submissions{% if reporter %} by {{ reporter }}{% else %}{% if connection %} by {{ connection }}{% endif %}{% endif %}</h2>
 	<table>
 		<thead>
 			<tr>
 				<th scope="col">Section</th>
-				<th scope="col">Raw Text</th>
+				<th scope="col" class="rawtext">Raw Text</th>
 				<th scope="col">Answers</th>
 				<th scope="col">Date + Time</th>{% if not reporter and not connection %}
 				<th scope="col">Reported By</th>{% endif %}
@@ -20,7 +20,7 @@
 		<tbody>{% if submissions.object_list %}{% for submission in submissions.object_list %}
 			<tr>
 				<td>{{ submission.section }}</td>
-				<td>{{ submission.raw_text }}</td>
+				<td class="rawtext">{{ submission.raw_text }}</td>
 				<td>{{ submission.number_of_answers }}</td>
 				<td>{{ submission.submitted|last_seen }}</td>{% if not reporter and not connection %}{% if submission.reporter %}
 				<td><a href="{% url submissions-by-reporter submission.reporter.pk %}" class="reporter{% if submission.reporter.full_name %}">{{ submission.reporter.full_name }}{% else %} unknown">Unknown{% endif %}</a></td>{% else %}
