@@ -45,6 +45,10 @@
 				</td>
 			</tr>
 		</tfoot>
-	</table>
+	</table>{% if reporter or connection %}
+	<div class="toolbar">{% if reporter %}
+		<a href="{% url view-reporter pk=reporter.pk %}" class="add">Edit {{ reporter }}</a>{% endif %}{% if connection %}
+		<a href="{{ connection.add_reporter_url }}" class="add">Add a Reporter from {{ connection }}</a>{% endif %}
+	</div>{% endif %}
 </div>
 {% endblock %}
