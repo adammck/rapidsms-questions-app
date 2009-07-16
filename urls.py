@@ -3,7 +3,7 @@
 
 
 from django.conf.urls.defaults import *
-import apps.questions.views as views
+import questions.views as views
 
 
 urlpatterns = patterns('',

@@ -3,7 +3,7 @@
 
 
 from django.contrib import admin
-from apps.questions.models import *
+from questions.models import *
 
 admin.site.register(Section)
 admin.site.register(Question)

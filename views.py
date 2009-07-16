@@ -6,9 +6,9 @@ from django.views.decorators.http import *
 from django.utils.simplejson import JSONEncoder
 from django.shortcuts import get_object_or_404
 from rapidsms.webui.utils import *
-from apps.questions.models import *
-from apps.reporters.models import *
-from apps.export.utils import excel
+from questions.models import *
+from reporters.models import *
+from export.utils import excel
 
 
 def __global(req):
@@ -82,7 +82,7 @@ def submissions(req, reporter_pk=None, connection_pk=None):
         
     # likewise for /connections/n/submissions
     # (TODO: right now, there is no /connections/n/
-    # view in apps.reporters.views, which is rather
+    # view in reporters.views, which is rather
     # confusing. we should probably implement it)
     elif connection_pk is not None:
         conn = get_object_or_404(PersistantConnection, pk=connection_pk)

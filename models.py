@@ -4,8 +4,8 @@
 
 import re
 from django.db import models
-from apps.locations.models import Location
-from apps.reporters.models import PersistantConnection, Reporter
+from locations.models import Location
+from reporters.models import PersistantConnection, Reporter
 
 
 class Section(models.Model):
