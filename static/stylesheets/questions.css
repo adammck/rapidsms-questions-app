@@ -66,14 +66,3 @@
 				margin-right: 0.5em;
 				color: #aaa;
 			}
-
-
-/* the first column is a kind of index, so
- * separate it from the others. maybe this
- * should become a common style */
-div.questions td.number,
-div.questions th.number {
-	border-right: 1px dotted #eee;
-	padding-right: 0.5em;
-	text-align: right;
-}
