@@ -54,7 +54,8 @@ class App(AppBase):
                     # TODO FIXME
                     #location=loc,
                     raw_text=text,
-                    **msg.persistance_dict)
+                    reporter=msg.contact,
+                    connection=msg.connection)
                 
                 # build an array of answers, by extracing
                 # a single "Qn. Whatever" token from the
