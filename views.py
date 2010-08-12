@@ -4,10 +4,9 @@
 
 from django.views.decorators.http import *
 from django.utils.simplejson import JSONEncoder
-from django.shortcuts import get_object_or_404
-from rapidsms.webui.utils import *
-from questions.models import *
-from reporters.models import *
+from django.shortcuts import get_object_or_404, render_to_response
+from .models import *
+from rapidsms.models import Contact
 from export.utils import excel
 
 
@@ -18,8 +17,9 @@ def __global(req):
 
 @require_GET
 def dashboard(req):
-    return render_to_response(req,
-        "questions/dashboard.html")
+    return render_to_response(
+        "questions/dashboard.html",
+        context_instance=RequestContext(req))
 
 
 @require_GET
@@ -27,11 +27,12 @@ def section(req, section_pk):
     sect = get_object_or_404(
         Section, pk=section_pk)
     
-    return render_to_response(req,
+    return render_to_response(
         "questions/section.html", {
             "active_section_tab": sect.pk,
             "questions": sect.questions.all(),
-            "section": sect })
+            "section": sect },
+            context_instance=RequestContext(req))
 
 
 @require_GET
@@ -39,12 +40,13 @@ def question(req, section_pk, question_pk):
     sect = get_object_or_404(Section, pk=section_pk)
     ques = get_object_or_404(Question, pk=question_pk)
     
-    return render_to_response(req,
+    return render_to_response(
         "questions/question.html", {
             "active_section_tab": sect.pk,
             "answers": ques.answers.all().select_related(),
             "question": ques,
-            "section": sect })
+            "section": sect },
+            context_instance=RequestContext(req))
 
 
 @require_GET
@@ -97,9 +99,9 @@ def submissions(req, reporter_pk=None, connection_pk=None):
         subm = Submission.objects.all().order_by("-submitted")
         data = { "submissions": paginated(req, subm) }
     
-    return render_to_response(req,
+    return render_to_response(
         "questions/submissions.html",
-        data)
+        data, context_instance=RequestContext(req))
 
 
 
@@ -161,13 +163,13 @@ def report(req):
         JSONEncoder().encode(
             graph_data)
     
-    return render_to_response(req,
+    return render_to_response(
         "questions/report.html", {
         "graph_data": graph_data_json,
         "submissions": submissions,
         "question_x": qx,
         "question_y": qy
-    })
+    }, context_instance=RequestContext(req))
     
     return HttpResponse(
         "subm: %r\nans: %r" % (list(submissions), list(answers)),
