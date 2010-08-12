@@ -4,6 +4,7 @@
 
 from django.views.decorators.http import *
 from django.utils.simplejson import JSONEncoder
+from django.template import RequestContext
 from django.shortcuts import get_object_or_404, render_to_response
 from .models import *
 from rapidsms.models import Contact
