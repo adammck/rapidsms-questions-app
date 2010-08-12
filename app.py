@@ -4,10 +4,11 @@
 
 import re
 import rapidsms
-from models import *
+from rapidsms.apps.base import AppBase
+from .models import *
 
 
-class App(rapidsms.app.App):
+class App(AppBase):
     def __join_Qs(self, sequence):
         strs = map(lambda x: "Q%d" % x, sequence)
         
