@@ -4,8 +4,9 @@
 
 import re
 from django.db import models
-from locations.models import Location
-from reporters.models import PersistantConnection, Reporter
+# TODO FIXME
+#from rapidsms.contrib.locations.models import Location
+from rapidsms.models import Connection, Contact
 
 
 class Section(models.Model):
@@ -135,9 +136,10 @@ class Option(models.Model):
 
 
 class Submission(models.Model):
-    reporter   = models.ForeignKey(Reporter, null=True, related_name="submissions")
-    connection = models.ForeignKey(PersistantConnection, null=True, related_name="submissions")
-    location   = models.ForeignKey(Location, null=True, related_name="submissions")
+    reporter   = models.ForeignKey(Contact, null=True, related_name="submissions")
+    connection = models.ForeignKey(Connection, null=True, related_name="submissions")
+# TODO FIXME
+#    location   = models.ForeignKey(Location, null=True, related_name="submissions")
     section    = models.ForeignKey(Section, related_name="submissions")
     submitted  = models.DateTimeField(auto_now_add=True)
     raw_text   = models.TextField()
